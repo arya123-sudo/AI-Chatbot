@@ -39,10 +39,6 @@ The chatbot can answer AI-related questions, interact using voice, analyze PDF n
 AI_Learning_Assistant
 │
 ├── app.py
-├── chatbot.py
-├── voice_chatbot.py
-├── pdf_chatbot.py
-├── gemini_chatbot.py
 ├── ai_dataset.txt
 ├── requirements.txt
 ├── README.md
