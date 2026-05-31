@@ -1,0 +1,22 @@
+[
+    {
+        "user": "hi",
+        "bot": "Hi there!"
+    },
+    {
+        "user": "helo",
+        "bot": "Sorry, I could not understand that properly."
+    },
+    {
+        "user": "hello",
+        "bot": "Hey!"
+    },
+    {
+        "user": "what is ai",
+        "bot": "Artificial Intelligence is a branch of computer science that enables machines to simulate human intelligence."
+    },
+    {
+        "user": "i need help",
+        "bot": "Yes, I can help you with AI, Machine Learning, NLP, Python, and Data Science topics."
+    }
+]

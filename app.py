@@ -1,11 +1,16 @@
 # ============================================
-# STREAMLIT AI LEARNING ASSISTANT CHATBOT
+# FINAL AI LEARNING ASSISTANT
+# ALL FEATURES IN ONE FILE
 # ============================================
 
 import streamlit as st
+import json
 import nltk
 import random
 import string
+import PyPDF2
+import speech_recognition as sr
+import pyttsx3
 
 from nltk.stem import WordNetLemmatizer
 
@@ -25,16 +30,16 @@ nltk.download('omw-1.4')
 # LOAD DATASET
 # ============================================
 
-f = open('ai_dataset.txt', 'r', errors='ignore')
+with open("ai_dataset.txt", "r", errors="ignore") as f:
 
-raw = f.read().lower()
+    raw = f.read().lower()
 
 sent_tokens = nltk.sent_tokenize(raw)
 
 conversation_history = []
 
 # ============================================
-# TEXT PREPROCESSING
+# NLP PREPROCESSING
 # ============================================
 
 lemmer = WordNetLemmatizer()
@@ -62,14 +67,18 @@ def LemNormalize(text):
 GREETING_INPUTS = (
     "hello",
     "hi",
-    "hey"
+    "hey",
+    "good morning",
+    "good evening",
+    "hii"
 )
 
 GREETING_RESPONSES = [
     "Hello!",
     "Hi there!",
     "Hey!",
-    "Ask me anything about AI."
+    "Welcome!",
+    "Hi, ask me anything about AI."
 ]
 
 def greeting(sentence):
@@ -88,20 +97,47 @@ intent_patterns = {
 
     "ai_definition": [
         "what is ai",
-        "define ai"
+        "define ai",
+        "artificial intelligence"
     ],
 
     "machine_learning": [
         "what is machine learning",
-        "define machine learning"
+        "define machine learning",
+        "ml"
     ],
 
     "deep_learning": [
-        "what is deep learning"
+        "what is deep learning",
+        "define deep learning"
     ],
 
     "nlp": [
-        "what is nlp"
+        "what is nlp",
+        "natural language processing"
+    ],
+
+    "python": [
+        "what is python",
+        "python language"
+    ],
+
+    "help": [
+        "help",
+        "can you help me",
+        "i need help",
+        "how can you help"
+    ],
+
+    "bye": [
+        "bye",
+        "goodbye",
+        "exit"
+    ],
+
+    "thanks": [
+        "thanks",
+        "thank you"
     ]
 }
 
@@ -121,7 +157,19 @@ intent_responses = {
         "Deep Learning uses neural networks with multiple hidden layers.",
 
     "nlp":
-        "Natural Language Processing enables computers to understand human language."
+        "Natural Language Processing enables computers to understand human language.",
+
+    "python":
+        "Python is a popular programming language used in AI and Machine Learning.",
+
+    "help":
+        "Yes, I can help you with AI, Machine Learning, NLP, Python, and Data Science topics.",
+
+    "bye":
+        "Goodbye! Keep learning AI.",
+
+    "thanks":
+        "You are welcome!"
 }
 
 # ============================================
@@ -143,12 +191,12 @@ def detect_intent(user_input):
     return None
 
 # ============================================
-# RESPONSE FUNCTION
+# SMART RESPONSE FUNCTION
 # ============================================
 
 def response(user_response):
 
-    chatbot_response = ''
+    chatbot_response = ""
 
     conversation_history.append(user_response)
 
@@ -158,7 +206,7 @@ def response(user_response):
 
     TfidfVec = TfidfVectorizer(
         tokenizer=LemNormalize,
-        stop_words='english'
+        stop_words="english"
     )
 
     tfidf = TfidfVec.fit_transform(sent_tokens)
@@ -173,49 +221,291 @@ def response(user_response):
 
     req_tfidf = flat[-2]
 
-    if req_tfidf == 0:
+    # ============================================
+    # CONFIDENCE CHECK
+    # ============================================
 
-        chatbot_response = (
-            "Sorry, I could not understand."
-        )
+    if req_tfidf < 0.2:
 
-        return chatbot_response
+        fallback_responses = [
+
+            "Sorry, I could not understand that properly.",
+
+            "Please ask questions related to AI, ML, NLP, or Python.",
+
+            "I am an AI Learning Assistant. Try asking AI-related questions.",
+
+            "Can you rephrase your question?"
+        ]
+
+        return random.choice(fallback_responses)
 
     else:
 
         chatbot_response = chatbot_response + sent_tokens[idx]
 
         return chatbot_response
+    
+    # ============================================
+# SAVE CHAT HISTORY
+# ============================================
+
+def save_chat(user, bot):
+
+    chat_data = {
+
+        "user": user,
+        "bot": bot
+    }
+
+    try:
+
+        with open("chat_history.json", "r") as file:
+
+            data = json.load(file)
+
+    except:
+
+        data = []
+
+    data.append(chat_data)
+
+    with open("chat_history.json", "w") as file:
+
+        json.dump(data, file, indent=4)
 
 # ============================================
-# STREAMLIT UI
+# VOICE ASSISTANT
+# ============================================
+
+recognizer = sr.Recognizer()
+
+engine = pyttsx3.init()
+
+# ============================================
+# SPEAK FUNCTION
+# ============================================
+
+def speak(text):
+
+    try:
+
+        engine.stop()
+
+        engine.say(text)
+
+        engine.runAndWait()
+
+    except RuntimeError:
+
+        pass
+def take_voice():
+
+    with sr.Microphone() as source:
+
+        recognizer.adjust_for_ambient_noise(source)
+
+        audio = recognizer.listen(source)
+
+    try:
+
+        text = recognizer.recognize_google(audio)
+
+        return text.lower()
+
+    except:
+
+        return "Could not recognize voice."
+
+# ============================================
+# PDF READER
+# ============================================
+
+def read_pdf(uploaded_file):
+
+    text = ""
+
+    pdf_reader = PyPDF2.PdfReader(uploaded_file)
+
+    for page in pdf_reader.pages:
+
+        extracted = page.extract_text()
+
+        if extracted:
+
+            text += extracted
+
+    return text
+
+# ============================================
+# STREAMLIT PAGE
 # ============================================
 
 st.set_page_config(
     page_title="AI Learning Assistant",
-    page_icon="🤖"
+    page_icon="🤖",
+    layout="centered"
 )
 
-st.title("🤖 AI Learning Assistant Chatbot")
+st.markdown(
+    """
+    <h1 style='text-align:center;'>
+    🤖 AI Learning Assistant
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 
-st.write("Ask me anything about AI, ML, NLP, Python")
+st.write(
+    "Ask anything about AI, ML, NLP, Python, or Data Science."
+)
 
-user_input = st.text_input("Enter your question")
+# ============================================
+# CHAT HISTORY
+# ============================================
 
-if st.button("Send"):
+if "messages" not in st.session_state:
 
-    if greeting(user_input) is not None:
+    st.session_state.messages = []
 
-        st.success(greeting(user_input))
+# ============================================
+# DISPLAY PREVIOUS MESSAGES
+# ============================================
+
+for message in st.session_state.messages:
+
+    with st.chat_message(message["role"]):
+
+        st.markdown(message["content"])
+
+# ============================================
+# USER INPUT
+# ============================================
+
+prompt = st.chat_input("Ask your question...")
+
+if prompt:
+
+    # USER MESSAGE
+    st.session_state.messages.append(
+        {
+            "role": "user",
+            "content": prompt
+        }
+    )
+
+    with st.chat_message("user"):
+
+        st.markdown(prompt)
+
+    # ============================================
+    # BOT RESPONSE
+    # ============================================
+
+    if greeting(prompt) is not None:
+
+        bot_response = greeting(prompt)
 
     else:
 
-        intent = detect_intent(user_input)
+        intent = detect_intent(prompt)
 
         if intent is not None:
 
-            st.success(intent_responses[intent])
+            bot_response = intent_responses[intent]
 
         else:
 
-            st.success(response(user_input))
+            bot_response = response(prompt)
+
+    # BOT MESSAGE
+    with st.chat_message("assistant"):
+
+        st.markdown(bot_response)
+
+    st.session_state.messages.append(
+        {
+            "role": "assistant",
+            "content": bot_response
+        }
+    )
+    save_chat(prompt, bot_response)
+
+# ============================================
+# SIDEBAR
+# ============================================
+
+st.sidebar.title("⚡ Features")
+
+# ============================================
+# VOICE ASSISTANT
+# ============================================
+
+if st.sidebar.button("🎤 Start Voice Assistant"):
+
+    voice_text = take_voice()
+
+    st.sidebar.success("You Said: " + voice_text)
+
+    if greeting(voice_text) is not None:
+
+        voice_response = greeting(voice_text)
+
+    else:
+
+        intent = detect_intent(voice_text)
+
+        if intent is not None:
+
+            voice_response = intent_responses[intent]
+
+        else:
+
+            voice_response = response(voice_text)
+
+    st.sidebar.info("Bot: " + voice_response)
+
+    speak(voice_response)
+
+# ============================================
+# PDF UPLOAD
+# ============================================
+
+st.sidebar.subheader("📄 Upload PDF")
+
+uploaded_file = st.sidebar.file_uploader(
+    "Upload AI Notes",
+    type=["pdf"]
+)
+
+if uploaded_file is not None:
+
+    pdf_text = read_pdf(uploaded_file)
+
+    st.sidebar.success("PDF Loaded Successfully")
+
+    st.sidebar.text_area(
+        "PDF Preview",
+        pdf_text[:2000],
+        height=250
+    )
+
+# ============================================
+# ABOUT
+# ============================================
+
+st.sidebar.subheader("ℹ️ About")
+
+st.sidebar.info(
+    """
+    AI Learning Assistant Chatbot
+
+    Features:
+    ✔ NLP Chatbot
+    ✔ Intent Detection
+    ✔ Conversation Memory
+    ✔ Voice Assistant
+    ✔ PDF Reader
+    ✔ Streamlit UI
+    """
+)
