@@ -1,8 +1,8 @@
 # ============================================
-# AI LEARNING ASSISTANT CHATBOT
+# STREAMLIT AI LEARNING ASSISTANT CHATBOT
 # ============================================
 
-# Import Libraries
+import streamlit as st
 import nltk
 import random
 import string
@@ -13,7 +13,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # ============================================
-# DOWNLOAD REQUIRED PACKAGES
+# DOWNLOAD NLTK DATA
 # ============================================
 
 nltk.download('punkt')
@@ -56,25 +56,20 @@ def LemNormalize(text):
     )
 
 # ============================================
-# GREETING SECTION
+# GREETING
 # ============================================
 
 GREETING_INPUTS = (
     "hello",
     "hi",
-    "hey",
-    "good morning",
-    "good evening",
-    "hii"
+    "hey"
 )
 
 GREETING_RESPONSES = [
     "Hello!",
     "Hi there!",
     "Hey!",
-    "Welcome!",
-    "Hello, how can I help you?",
-    "Hi, ask me anything about AI."
+    "Ask me anything about AI."
 ]
 
 def greeting(sentence):
@@ -93,44 +88,20 @@ intent_patterns = {
 
     "ai_definition": [
         "what is ai",
-        "define ai",
-        "artificial intelligence"
+        "define ai"
     ],
 
     "machine_learning": [
         "what is machine learning",
-        "define machine learning",
-        "ml"
+        "define machine learning"
     ],
 
     "deep_learning": [
-        "what is deep learning",
-        "define deep learning"
+        "what is deep learning"
     ],
 
     "nlp": [
-        "what is nlp",
-        "natural language processing"
-    ],
-
-    "python": [
-        "what is python",
-        "python language"
-    ],
-
-    "computer_vision": [
-        "what is computer vision",
-        "define computer vision"
-    ],
-
-    "robotics": [
-        "what is robotics",
-        "define robotics"
-    ],
-
-    "deepfake": [
-        "what is deepfake",
-        "define deepfake"
+        "what is nlp"
     ]
 }
 
@@ -150,23 +121,11 @@ intent_responses = {
         "Deep Learning uses neural networks with multiple hidden layers.",
 
     "nlp":
-        "Natural Language Processing enables computers to understand and process human language.",
-
-    "python":
-        "Python is a popular programming language used in AI and Machine Learning.",
-
-    "computer_vision":
-        "Computer Vision enables machines to understand and analyze images and videos.",
-
-    "robotics":
-        "Robotics combines Artificial Intelligence and engineering to create intelligent machines.",
-
-    "deepfake":
-        "Deepfake technology uses AI to generate fake images, videos, or audio that appear realistic."
+        "Natural Language Processing enables computers to understand human language."
 }
 
 # ============================================
-# DETECT USER INTENT
+# DETECT INTENT
 # ============================================
 
 def detect_intent(user_input):
@@ -191,10 +150,8 @@ def response(user_response):
 
     chatbot_response = ''
 
-    # Save conversation history
     conversation_history.append(user_response)
 
-    # Keep last 3 conversations
     context_text = " ".join(conversation_history[-3:])
 
     sent_tokens.append(context_text)
@@ -219,7 +176,7 @@ def response(user_response):
     if req_tfidf == 0:
 
         chatbot_response = (
-            "Sorry, I could not understand your question."
+            "Sorry, I could not understand."
         )
 
         return chatbot_response
@@ -231,48 +188,34 @@ def response(user_response):
         return chatbot_response
 
 # ============================================
-# CHATBOT START
+# STREAMLIT UI
 # ============================================
 
-print("==========================================")
-print("     AI LEARNING ASSISTANT CHATBOT")
-print("==========================================")
-print("Ask me anything about AI, ML, NLP, Python")
-print("Type 'bye' to exit")
-print()
+st.set_page_config(
+    page_title="AI Learning Assistant",
+    page_icon="🤖"
+)
 
-while True:
+st.title("🤖 AI Learning Assistant Chatbot")
 
-    user_response = input("You : ")
+st.write("Ask me anything about AI, ML, NLP, Python")
 
-    user_response = user_response.lower()
+user_input = st.text_input("Enter your question")
 
-    # EXIT
-    if user_response == 'bye':
+if st.button("Send"):
 
-        print("Bot : Goodbye! Keep learning AI.")
+    if greeting(user_input) is not None:
 
-        break
+        st.success(greeting(user_input))
 
-    # THANKS
-    elif user_response in ['thanks', 'thank you']:
-
-        print("Bot : You are welcome!")
-
-    # GREETING
-    elif greeting(user_response) is not None:
-
-        print("Bot :", greeting(user_response))
-
-    # INTENT DETECTION
     else:
 
-        intent = detect_intent(user_response)
+        intent = detect_intent(user_input)
 
         if intent is not None:
 
-            print("Bot :", intent_responses[intent])
+            st.success(intent_responses[intent])
 
         else:
 
-            print("Bot :", response(user_response))
+            st.success(response(user_input))

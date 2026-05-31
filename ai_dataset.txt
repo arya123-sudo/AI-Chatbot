@@ -1,0 +1,89 @@
+Artificial Intelligence is a branch of computer science that enables machines to simulate human intelligence.
+
+Machine Learning is a subset of Artificial Intelligence that allows computers to learn patterns from data without being explicitly programmed. It is widely used in recommendation systems, image recognition, and predictive analytics.Deep Learning is a branch of machine learning that uses neural networks with multiple layers.
+
+Natural Language Processing enables computers to understand and process human language.
+
+Python is one of the most popular programming languages used in Artificial Intelligence and Machine Learning.
+
+Data Science is the process of extracting useful information from data using scientific methods and algorithms.
+
+Computer Vision enables machines to interpret and analyze visual information from images and videos.
+
+Robotics combines Artificial Intelligence and engineering to build intelligent robots.
+
+An expert system is an AI application that mimics the decision-making ability of a human expert.
+
+Supervised learning is a machine learning technique where models are trained using labeled data.
+
+Unsupervised learning is a machine learning technique where models identify patterns in unlabeled data.
+
+Reinforcement learning is a machine learning approach where agents learn by interacting with the environment.
+
+A neural network is a computing system inspired by the human brain.
+
+TensorFlow is an open-source machine learning framework developed by Google.
+
+PyTorch is a deep learning framework widely used for AI research and development.
+
+Classification is a supervised learning task used to predict categories.
+
+Regression is a machine learning technique used to predict continuous values.
+
+Clustering is an unsupervised learning method used to group similar data points.
+
+K-Means is a clustering algorithm used in unsupervised learning.
+
+Decision Trees are machine learning models used for classification and regression tasks.
+
+Random Forest is an ensemble learning algorithm that combines multiple decision trees.
+
+Support Vector Machine is a supervised learning algorithm used for classification problems.
+
+Overfitting occurs when a machine learning model performs well on training data but poorly on new data.
+
+Underfitting occurs when a model cannot capture the underlying pattern of the data.
+
+Accuracy is the ratio of correctly predicted observations to total observations.
+
+Precision measures how many predicted positive values are actually positive.
+
+Recall measures how many actual positive values are correctly identified.
+
+F1 Score is the harmonic mean of precision and recall.
+
+Feature engineering is the process of selecting and transforming variables for machine learning models.
+
+A dataset is a collection of related data used for analysis and machine learning.
+
+Big Data refers to extremely large and complex datasets that cannot be processed using traditional methods.
+
+Artificial Neural Networks are inspired by biological neural networks in the human brain.
+
+Convolutional Neural Networks are mainly used for image processing tasks.
+
+Recurrent Neural Networks are used for sequential and time-series data.
+
+Generative AI is a type of Artificial Intelligence that creates text, images, audio, and videos.
+
+ChatGPT is a conversational AI model developed by OpenAI.
+
+Prompt engineering is the process of designing effective prompts for AI systems.
+
+Ethics in AI focuses on fairness, transparency, privacy, and accountability in intelligent systems.
+
+Automation uses technology to perform tasks with minimal human intervention.
+
+Speech Recognition converts spoken language into text.
+
+Image Recognition enables machines to identify objects and patterns in images.
+
+Recommendation systems suggest products or content based on user behavior and preferences.
+
+Cybersecurity uses AI for threat detection and prevention.
+
+Healthcare uses AI for disease prediction, diagnosis, and medical imaging.
+
+AI in education helps students through intelligent tutoring systems and personalized learning.
+
+Virtual assistants like Siri and Alexa use Artificial Intelligence and Natural Language Processing.

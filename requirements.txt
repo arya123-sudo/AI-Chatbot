@@ -1,0 +1,8 @@
+nltk
+scikit-learn
+streamlit
+PyPDF2
+SpeechRecognition
+pyttsx3
+pyaudio
+google-genai
